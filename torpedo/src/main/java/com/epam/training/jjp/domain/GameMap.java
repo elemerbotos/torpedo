@@ -10,6 +10,11 @@ public class GameMap implements GameMapInterface {
 	private List<Ship> ships;
 	private static final int DEFAULT_SIZE = 30;
 	
+	private int numberOfShipTiles = 0;
+	
+	public int getDefaultSize() {
+		return DEFAULT_SIZE;
+	}
 	
 	public GameMap(final int size) {
 		this.size = size;
@@ -27,15 +32,10 @@ public class GameMap implements GameMapInterface {
 		return ships;
 	}
 	
-	public void addShip(Ship ship, int x, int y) {
-		placeShip(ship, x, y);
-	}
-	
 	public void placeShip(Ship ship, int x, int y) throws IndexOutOfBoundsException,IllegalArgumentException {
 		if(!isThePlaceFree(ship, x, y)) {
 			throw new IllegalArgumentException("Place is not free! ");
 		}
-		
 		int numOfShips = ships.size();
 		
 		for(int i = 0 ; i < 4 ; ++i) {
@@ -46,6 +46,7 @@ public class GameMap implements GameMapInterface {
 			}
 		}
 		
+		numberOfShipTiles += ship.getHealthPoints();
 		ships.add(ship);
 	}
 	
@@ -54,35 +55,41 @@ public class GameMap implements GameMapInterface {
 			throw new IllegalArgumentException("Not the first try! ");
 		}
 		boolean result = false;
-		if(coordinates[x][y] == 0) {
-			updateShipData(x, y);
+		if(coordinates[x][y] > 0) {
+			Ship victim = updateShipData(x, y);
+			inCaseSank(victim, x, y);
 			
 			coordinates[x][y] *= -1;
+			--numberOfShipTiles;
 			
 			result = true;
 		}
 		return result;
 	}
+
+	private void inCaseSank(Ship victim, int x, int y) {
+		if(victim != null) {
+			System.out.println("A " + victim.getType() + " sank id: " + coordinates[x][y]);
+		}
+	}
 	
 	public boolean isThereAnyShipLeft() {
-		boolean isThere = false;
-		for(int i = 0, j = 0; i < size ; ++i, ++j) {
-			isThere |= coordinates[i][j] > 0;
-		}
-		return isThere;
+		return numberOfShipTiles > 0;
 	}
 	
 	public void setShips(List<Ship> ships, List<Integer> xs, List<Integer> ys) {
 		for(int i = 0; i < ships.size() ; ++i) {
-			addShip(ships.get(i), xs.get(i), ys.get(i));
+			placeShip(ships.get(i), xs.get(i), ys.get(i));
 		}
 		
 	}
 
-	private void updateShipData(int x, int y) {
+	private Ship updateShipData(int x, int y) {
 		int id = getIndexFromID(x, y);
-		Ship victim = ships.get(id);
+		Ship victim = ships.remove(id);
 		victim.sufferHit();
+		ships.add(victim);
+		return victim.getHealthPoints() > 0 ? null : victim;
 	}
 
 	private int getIndexFromID(int x, int y) {
@@ -121,5 +128,17 @@ public class GameMap implements GameMapInterface {
 				
 			}
 		}
+	}
+	
+	@Override
+	public String toString() {
+		StringBuilder strBuilder = new StringBuilder();
+		for(int i = 0 ; i < coordinates.length ; ++i) {
+			strBuilder.append("\n");
+			for(int j = 0; j < coordinates[i].length ; ++j) {
+				strBuilder.append(coordinates[i][j] + " ");
+			}
+		}
+		return strBuilder.toString();
 	}
 }
