@@ -4,11 +4,16 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 public class GameMap implements GameMapInterface {
 	private int[][] coordinates;
-	private final int size;
+	private int size;
 	private List<Ship> ships;
 	private static final int DEFAULT_SIZE = 30;
+	
+	private static final Logger LOGGER = LoggerFactory.getLogger(Game.class);
 	
 	private int numberOfShipTiles = 0;
 	
@@ -19,7 +24,6 @@ public class GameMap implements GameMapInterface {
 	public GameMap(final int size) {
 		this.size = size;
 		ships = new ArrayList<>();
-		coordinates = new int[size][size];
 	}
 	
 	public GameMap() {
@@ -69,7 +73,7 @@ public class GameMap implements GameMapInterface {
 
 	private void inCaseSank(Ship victim, int x, int y) {
 		if(victim != null) {
-			System.out.println("A " + victim.getType() + " sank id: " + coordinates[x][y]);
+			LOGGER.info("A " + victim.getType() + " sank id: " + coordinates[x][y]);
 		}
 	}
 	
@@ -140,5 +144,14 @@ public class GameMap implements GameMapInterface {
 			}
 		}
 		return strBuilder.toString();
+	}
+	
+	public int getSize() {
+		return size;
+	}
+	
+	public void setSize(final int size) {
+		this.size = size;
+		coordinates = new int[size][size];
 	}
 }

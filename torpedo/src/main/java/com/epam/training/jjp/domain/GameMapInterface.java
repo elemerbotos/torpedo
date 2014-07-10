@@ -13,4 +13,6 @@ public interface GameMapInterface {
 	void placeShipToRandomePosition(Ship ship);
 	
 	int getDefaultSize();
+	
+	int getSize();
 }
