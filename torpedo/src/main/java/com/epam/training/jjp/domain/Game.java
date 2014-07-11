@@ -3,7 +3,12 @@ package com.epam.training.jjp.domain;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Game {
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import com.epam.training.jjp.display.UserInterface;
+
+public class Game extends Thread{
 	private GameMapInterface mapFirstPlayers;
 	private GameMapInterface mapSecondPlayers;
 	private byte[][][] shipMaps;
@@ -14,6 +19,8 @@ public class Game {
 	private Player player2;
 	
 	private GameModes mode;
+	private UserInterface ui;
+	private static final Logger LOGGER = LoggerFactory.getLogger(Game.class);
 
 	public Game() {
 		generateShipMaps();
@@ -39,12 +46,19 @@ public class Game {
 		return mode;
 	}
 	
-	public void Run() {
+	public void Start() {
 		initMaps();
 		
-		gameCycle();
+		try {
+			gameCycle();
+			
+			decideWinner();
+		} catch (InterruptedException e) {
+			LOGGER.info("Game interrupted! ");
+			e.printStackTrace();
+		}
 		
-		decideWinner();
+		
 	}
 
 	private void decideWinner() {
@@ -58,18 +72,25 @@ public class Game {
 		
 	}
 
-	private void gameCycle() {
+	private void gameCycle() throws InterruptedException {
 		while(mapFirstPlayers.isThereAnyShipLeft() && mapSecondPlayers.isThereAnyShipLeft() ) {
+			Thread.sleep(500);
 			Coordinate coordinate1 = player1.selectCoordinate();
 			Coordinate coordinate2 = player2.selectCoordinate();
-			mapSecondPlayers.shoot(coordinate1.getX(), coordinate1.getY());
+			boolean isThereHit = mapSecondPlayers.shoot(coordinate1.getX(), coordinate1.getY());
+			handleHit(isThereHit, coordinate1);
 			if(mapSecondPlayers.isThereAnyShipLeft()) {
-				mapFirstPlayers.shoot(coordinate2.getX(), coordinate2.getY());
+				isThereHit = mapFirstPlayers.shoot(coordinate2.getX(), coordinate2.getY());
+				handleHit(isThereHit, coordinate2);
 			}
 		}
 	}
 
 	
+
+	private void handleHit(boolean isThereHit, Coordinate coordinate) {
+		ui.setHit(isThereHit, coordinate.getX(), coordinate.getY());
+	}
 
 	public void initMaps() {
 		player1.setShips(generateShips());
@@ -184,6 +205,27 @@ public class Game {
 	@Override
 	public String toString() {
 		return "First players map: \n\r" + mapFirstPlayers.toString() + "\n\rSecond Players map: \n\r" + mapSecondPlayers.toString();
+	}
+
+	@Override
+	public void run() {
+		synchronized (this) {
+			try {
+				LOGGER.info("Game thread waiting for user to start! ");
+				this.wait(5000);
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+		}
+		Start();
+	}
+
+	public void setUI(UserInterface ui) {
+		this.ui = ui;	
+	}
+
+	public int getMapSize() {
+		return mapFirstPlayers.getSize();
 	}
 
 }
