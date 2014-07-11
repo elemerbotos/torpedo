@@ -19,16 +19,16 @@ public class App {
 		game.setPlayer1(new MyTorpedoAI());
 		game.setPlayer2(new MyTorpedoAI());
 		
-		UserInterface ui = new UserInterface();
-		ui.setSize(game.getMapSize());
-		game.setUI(ui);
+//		UserInterface ui = new UserInterface();
+//		ui.setSize(game.getMapSize());
+//		game.setUI(ui);
 		
 
 		Thread gameThread = new Thread(game);
 		gameThread.start();
-		Thread uiThread = new Thread(ui);
-		ui.setGameThread(gameThread);
-		uiThread.start();
+//		Thread uiThread = new Thread(ui);
+//		ui.setGameThread(gameThread);
+//		uiThread.start();
 	}
 
 }

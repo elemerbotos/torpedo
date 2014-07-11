@@ -7,6 +7,7 @@ public class Player {
 	protected List<Ship> ships;
 	protected boolean[][] map;
 	protected int size = 0;
+	protected boolean previousTryIsAHit;
 	
 	void setShips(List<Ship> ships) {
 		this.ships = ships;
@@ -24,5 +25,10 @@ public class Player {
 			}
 		}
 		this.size = size;
+	}
+
+	public void setPreviousTryIsAHit(boolean isThereHit) {
+		previousTryIsAHit = isThereHit;
+		
 	}
 }

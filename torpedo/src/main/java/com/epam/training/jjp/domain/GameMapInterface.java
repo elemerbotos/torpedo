@@ -15,4 +15,8 @@ public interface GameMapInterface {
 	int getDefaultSize();
 	
 	int getSize();
+	
+	void setSize(int size);
+
+	String printMap();
 }
