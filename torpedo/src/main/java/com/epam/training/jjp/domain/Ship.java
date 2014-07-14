@@ -4,14 +4,14 @@ public class Ship {
 
 	int healthPoints;
 	int type;
-	byte[][] shipMap = new byte[4][4];
+	Byte[][] shipMap = new Byte[4][4];
 	
 	public Ship() {
 		healthPoints = 0;
 		type = 0;
 	}
 	
-	public Ship(byte[][] shipMap, int healthPoints, int type ) {
+	public Ship(Byte[][] shipMap, int healthPoints, int type ) {
 		this.healthPoints = healthPoints;
 		this.shipMap = shipMap;
 		this.type = type;
@@ -37,11 +37,11 @@ public class Ship {
 		return healthPoints;
 	}
 
-	public byte[][] getShipMap() {
+	public Byte[][] getShipMap() {
 		return shipMap;
 	}
 
-	public void setShipMap(byte[][] shipMap) {
+	public void setShipMap(Byte[][] shipMap) {
 		this.shipMap = shipMap;
 	}
 

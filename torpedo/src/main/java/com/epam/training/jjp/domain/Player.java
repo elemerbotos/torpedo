@@ -5,9 +5,9 @@ import java.util.List;
 public class Player {
 	protected static final float RANDOME_MULTIPLIER = 100f;
 	protected List<Ship> ships;
-	protected boolean[][] map;
-	protected int size = 0;
-	protected boolean previousTryIsAHit;
+	protected Byte[][] map;
+	protected int sizeX = 30;
+	protected int sizeY = 30;
 	
 	void setShips(List<Ship> ships) {
 		this.ships = ships;
@@ -17,18 +17,18 @@ public class Player {
 		return new Coordinate(0,0);
 	}
 	
-	public void setMapSize(int size) {
-		map = new boolean[size][size];
-		for(int i = 0 ; i < size ; ++i) {
-			for(int j = 0 ; j < size ; ++j) {
-				map[i][j] = false;
+	public void setMapSize(int sizeX, int sizeY) {
+		map = new Byte[sizeX][sizeY];
+		for(int x = 0 ; x < sizeX ; ++x) {
+			for(int y = 0 ; y < sizeY ; ++y) {
+				map[x][y] = 0;
 			}
 		}
-		this.size = size;
+		this.sizeX = sizeX;
+		this.sizeY = sizeY;
 	}
-
-	public void setPreviousTryIsAHit(boolean isThereHit) {
-		previousTryIsAHit = isThereHit;
+	
+	public void Hit(Boolean isItAHit) {
 		
 	}
 }

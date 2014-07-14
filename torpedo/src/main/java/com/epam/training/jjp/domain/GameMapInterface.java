@@ -6,7 +6,7 @@ public interface GameMapInterface {
 	
 	List<Ship> getShips();
 	
-	boolean shoot(int x, int y);
+	int shoot(int x, int y);
 	
 	boolean isThereAnyShipLeft();
 	
@@ -14,9 +14,10 @@ public interface GameMapInterface {
 	
 	int getDefaultSize();
 	
-	int getSize();
-	
-	void setSize(int size);
+	int getSizeX();
+	int getSizeY();
 
 	String printMap();
+
+	int getHP();
 }
