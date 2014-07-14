@@ -179,12 +179,13 @@ public class Game extends Thread {
 		LOGGER.info("message: " + message);
 		if (message.equals("HIT") || message.equals("SUNK")
 				|| message.equals("MISS")) {
-
+			
 		} else
 			errorInput(message);
 		boolean isThereHit = message.equals("HIT") || message.equals("SUNK");
 		if (isThereHit) {
 			--theEnemysHP;
+			System.out.println(mapSecondPlayers.printMap());
 		}
 		player2.Hit(isThereHit);
 	}

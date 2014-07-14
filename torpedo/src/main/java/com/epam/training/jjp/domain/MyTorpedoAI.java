@@ -67,7 +67,7 @@ public class MyTorpedoAI extends Player implements TorpedoAI {
 			map[x-1][y] = -1;
 		}
 		
-		if(y+1 >= sizeY && map[x][y+1] == 0) {
+		if(y+1 < sizeY && map[x][y+1] == 0) {
 			prevShootsNeighbours.add(new Coordinate(x, y+1));
 			map[x][y+1] = -1;
 		}

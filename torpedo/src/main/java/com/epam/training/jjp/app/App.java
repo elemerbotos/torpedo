@@ -17,7 +17,9 @@ import com.epam.training.jjp.domain.Game;
 
 public class App {
 	// JANOS: ephubudw0070
-	private static final String HOST = "ephubudw0080";
+	// PETI: ephubudw0080
+	// ANIKO: ephubudw0185
+	private static final String HOST = "ephubudw0185";
 	private static String type;
 	private Game game;
 	private int mapSizeX = 30;
@@ -59,6 +61,7 @@ public class App {
 		try {
 			listener = new ServerSocket(5000);
 			Socket socket = listener.accept();
+			socket.setTcpNoDelay(true);
 			LOGGER.info("Socket open");
 			try(PrintWriter out = new PrintWriter(socket.getOutputStream(), true)) {
 					BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
@@ -66,6 +69,7 @@ public class App {
 					try {
 						game.startGame(in, out);
 					} catch (Exception e) {
+						System.out.println("ERROR");
 						out.println("ERROR " + e.getMessage());
 						LOGGER.error("from server: " + in.readLine());
 						e.printStackTrace();
@@ -81,15 +85,18 @@ public class App {
 	
 	private void runClient() throws IOException {
 		Socket socket = new Socket(HOST, 5000);
+		socket.setTcpNoDelay(true);
 		LOGGER.info("Socket open");
 			try(PrintWriter out = new PrintWriter(socket.getOutputStream(), true)) {
 				BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
 				setSize(in);
+				
 				initGame();
 				try {
 					Thread.sleep(1000);
 					game.startGame(in, out);
 				} catch (Exception e) {
+					System.out.println("ERROR");
 					out.println("ERROR " + e.getMessage());
 					LOGGER.error("from client: " + in.readLine());
 					e.printStackTrace();
